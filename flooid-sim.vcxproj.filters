@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CudaCompile Include="src\kernel.cu" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\app.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\imgui.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\imgui_demo.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\imgui_draw.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\imgui_tables.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\imgui_widgets.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_glfw.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="dependencies\imgui\imgui-1.89.9\misc\cpp\imgui_stdlib.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\kernel.cuh" />
+    <ClInclude Include="src\app.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\imconfig.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\imgui.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\imgui_internal.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\imstb_rectpack.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\imstb_textedit.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\imstb_truetype.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_glfw.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_opengl3.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="dependencies\imgui\imgui-1.89.9\misc\cpp\imgui_stdlib.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="dependencies\imgui\imgui-1.89.9\misc\debuggers\imgui.natvis" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dependencies\imgui\imgui-1.89.9\misc\debuggers\imgui.natstepfilter" />
+  </ItemGroup>
+</Project>

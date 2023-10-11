@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.7.34202.233
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "flooid-sim", "flooid-sim.vcxproj", "{76C250BB-056C-4CCA-8FA5-A828C8295547}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{76C250BB-056C-4CCA-8FA5-A828C8295547}.Debug|x64.ActiveCfg = Debug|x64
+		{76C250BB-056C-4CCA-8FA5-A828C8295547}.Debug|x64.Build.0 = Debug|x64
+		{76C250BB-056C-4CCA-8FA5-A828C8295547}.Release|x64.ActiveCfg = Release|x64
+		{76C250BB-056C-4CCA-8FA5-A828C8295547}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0B6EECE0-BCA1-44A1-8BDA-A1059D660220}
+	EndGlobalSection
+EndGlobal
