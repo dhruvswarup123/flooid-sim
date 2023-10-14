@@ -1,6 +1,6 @@
 #define GLEW_STATIC
 #define GL_SILENCE_DEPRECATION
-//#define IMGUI_ENABLE
+#define IMGUI_ENABLE
 
 // C++ Libs
 #include <optional>
@@ -22,6 +22,8 @@
 // My imports
 #include "app.h"
 
+static constexpr int kWindowSize[] = { 1280, 720 }; // Width x height
+static constexpr ImVec4 kClearColor{ 25 / 255.0f, 65 / 255.0f, 105 / 255.0f, 1.00f };
 
 static void glfwErrorCallback(int error, const char* description) {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);
@@ -52,7 +54,7 @@ int main(int, char**)
 #endif
 
     // Create window with graphics context
-    GLFWwindow * window { glfwCreateWindow(1280, 720, "This is a window", nullptr, nullptr) };
+    GLFWwindow * window { glfwCreateWindow(kWindowSize[0], kWindowSize[1], "This is a window", nullptr, nullptr)};
     if (window == nullptr) return 1;
     glfwMakeContextCurrent(window);
     if (glewInit() != GLEW_OK) return 1;
@@ -80,13 +82,12 @@ int main(int, char**)
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
+        glClearColor(kClearColor.x * kClearColor.w, kClearColor.y * kClearColor.w, kClearColor.z * kClearColor.w, kClearColor.w);
+        glClear(GL_COLOR_BUFFER_BIT);
+
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
         glViewport(0, 0, display_w, display_h);
-
-        static constexpr ImVec4 kClearColor{ 25 / 255.0f, 65 / 255.0f, 105 / 255.0f, 1.00f };
-        glClearColor(kClearColor.x * kClearColor.w, kClearColor.y * kClearColor.w, kClearColor.z * kClearColor.w, kClearColor.w);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         app.loop();
 
@@ -127,6 +128,8 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 #endif
+
+    app.deinit();
 
     glfwDestroyWindow(window);
     glfwTerminate();
