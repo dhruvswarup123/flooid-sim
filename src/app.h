@@ -7,12 +7,18 @@
 
 #include "shader_utils.h"
 
+static constexpr int kPointsPerTriangle{ 6 }; // aka the number of vertex points
+static constexpr int kNumParticles{ 1000 }; // aka the number of triangles
+float positions[kPointsPerTriangle * kNumParticles];
+
 class App final {
 public:
 	void setup() {
+		populatePositions();
+
 		glGenBuffers(1, &circle_buffer_);
 		glBindBuffer(GL_ARRAY_BUFFER, circle_buffer_);
-		glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, kPointsPerTriangle * kNumParticles * sizeof(float), positions, GL_STATIC_DRAW);
 
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0);
@@ -26,7 +32,7 @@ public:
 	}
 
 	void loop() {
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, kNumParticles * 3);
 	}
 
 	void deinit() {
@@ -34,14 +40,33 @@ public:
 	}
 
 private:
+	static constexpr float kRadius{ 0.005 };
+
 	// GL buffer
 	unsigned int circle_buffer_{};
 	unsigned int shader_program_{};
 
-	float positions[6] = {
-			-0.5f, -0.5f,
-			0.0f, 0.5f,
-			0.5f, -0.5f
-	};
+
+	// Horribly inefficient algorithm
+	// Convert to equilateral triangle ideally
+	void populatePositions() {
+		for (int i = 0; i < kNumParticles; i++) {
+			float x = rand() % 200 / 100.0 - 1;
+			float y = rand() % 200 / 100.0 - 1;
+			float A_x{ x };
+			float A_y{ y };
+			float B_x{ x + kRadius };
+			float B_y{A_y};
+			float C_x{ A_x };
+			float C_y{ A_y + kRadius };
+
+			positions[i * 6 + 0] = A_x;
+			positions[i * 6 + 1] = A_y;
+			positions[i * 6 + 2] = B_x;
+			positions[i * 6 + 3] = B_y;
+			positions[i * 6 + 4] = C_x;
+			positions[i * 6 + 5] = C_y;
+		}
+	}
 };
 
