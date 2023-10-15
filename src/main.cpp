@@ -17,7 +17,6 @@
 
 // GLFW
 #include <GLFW/glfw3.h>
-#include <GL/gl.h>
 
 // My imports
 #include "app.h"
@@ -31,8 +30,6 @@ static void glfwErrorCallback(int error, const char* description) {
 
 int main(int, char**)
 {   
-    App app;
-
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit()) return false;
 
@@ -75,21 +72,23 @@ int main(int, char**)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init(glsl_version);
 #endif
+    GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    GL_CALL(glEnable(GL_BLEND));
 
-    app.setup();
+    App::setup();
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
 
-        glClearColor(kClearColor.x * kClearColor.w, kClearColor.y * kClearColor.w, kClearColor.z * kClearColor.w, kClearColor.w);
-        glClear(GL_COLOR_BUFFER_BIT);
+        GL_CALL(glClearColor(kClearColor.x * kClearColor.w, kClearColor.y * kClearColor.w, kClearColor.z * kClearColor.w, kClearColor.w));
+        GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
 
         int display_w, display_h;
         glfwGetFramebufferSize(window, &display_w, &display_h);
-        glViewport(0, 0, display_w, display_h);
+        GL_CALL(glViewport(0, 0, display_w, display_h));
 
-        app.loop();
+        App::loop();
 
 #ifdef IMGUI_ENABLE
         ImGui_ImplOpenGL3_NewFrame();
@@ -129,7 +128,7 @@ int main(int, char**)
     ImGui::DestroyContext();
 #endif
 
-    app.deinit();
+    App::deinit();
 
     glfwDestroyWindow(window);
     glfwTerminate();

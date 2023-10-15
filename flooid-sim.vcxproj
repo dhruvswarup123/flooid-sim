@@ -115,8 +115,10 @@
     <ClInclude Include="dependencies\imgui\imgui-1.89.9\imstb_textedit.h" />
     <ClInclude Include="dependencies\imgui\imgui-1.89.9\imstb_truetype.h" />
     <ClInclude Include="dependencies\imgui\imgui-1.89.9\misc\cpp\imgui_stdlib.h" />
-    <ClInclude Include="src\shader_utils.h" />
+    <ClInclude Include="src\renderer.h" />
+    <ClInclude Include="src\shader.h" />
     <ClInclude Include="src\app.h" />
+    <ClInclude Include="src\vertex_buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="dependencies\imgui\imgui-1.89.9\misc\debuggers\imgui.natvis" />
