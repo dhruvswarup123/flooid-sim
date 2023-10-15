@@ -10,6 +10,7 @@
     <ClCompile Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_glfw.cpp" />
     <ClCompile Include="dependencies\imgui\imgui-1.89.9\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="dependencies\imgui\imgui-1.89.9\misc\cpp\imgui_stdlib.cpp" />
+    <ClCompile Include="src\simulator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.h" />
@@ -26,6 +27,9 @@
     <ClInclude Include="src\shader.h" />
     <ClInclude Include="src\renderer.h" />
     <ClInclude Include="src\vertex_buffer.h" />
+    <ClInclude Include="src\simulator.h" />
+    <ClInclude Include="src\constants.h" />
+    <ClInclude Include="src\particles.h" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="dependencies\imgui\imgui-1.89.9\misc\debuggers\imgui.natvis" />

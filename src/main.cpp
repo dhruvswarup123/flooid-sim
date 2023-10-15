@@ -20,9 +20,8 @@
 
 // My imports
 #include "app.h"
+#include "constants.h"
 
-static constexpr int kWindowSize[] = { 1280, 720 }; // Width x height
-static constexpr ImVec4 kClearColor{ 25 / 255.0f, 65 / 255.0f, 105 / 255.0f, 1.00f };
 
 static void glfwErrorCallback(int error, const char* description) {
     fprintf(stderr, "GLFW Error %d: %s\n", error, description);

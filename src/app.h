@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <chrono>
+#include <mutex>
 
 #include <GL/glew.h>
 
@@ -13,16 +14,11 @@
 
 #include "vertex_buffer.h"
 #include "shader.h"
+#include "constants.h"
+#include "particles.h"
+#include "simulator.h"
 
-// Customizable
-static constexpr int kNumParticles{ 100000 }; // == num primitives
-static constexpr float kParticleRadius{ 0.005 };
 
-// Primitives
-static constexpr int kVerticesPerParticle{ 3 }; // Triangle
-static constexpr int kFloatsInVertexPosition{ 2 }; // 2D position
-static constexpr int kFloatsInCentroid{ 2 }; // 2D centroid
-static constexpr int kFloatsInColor{ 3 }; // 3D color
 
 // Total number of floats
 static constexpr int kFloatsPerVertex{ kFloatsInVertexPosition + kFloatsInCentroid + kFloatsInColor}; 
@@ -39,7 +35,7 @@ static float velocities[2 * kNumParticles];
 class App {
 public:
 	void setup() {
-		populatePositions();
+		updateDataFromSimulator();
 
 		vb.init(vertex_buffer, kTotalFloats * sizeof(float));
 		shader.init("shaders/shader.vert", "shaders/shader.frag");
@@ -62,8 +58,12 @@ public:
 	void loop() {
 		auto time = std::chrono::high_resolution_clock::now();
 		auto duration = duration_cast<std::chrono::microseconds>(time - start_time);
-		if (duration >= std::chrono::milliseconds(1)) {
-			updatePositions();
+		if (duration >= std::chrono::milliseconds(10)) {
+			//updatePositions();
+			sim.loop();
+			updateDataFromSimulator();
+
+
 			vb.subData(vertex_buffer, kTotalFloats * sizeof(float));
 			start_time = time;
 		}
@@ -95,6 +95,28 @@ private:
 		vertex_buffer[triangle_num * kFloatsPerParticle + vertex_num * kFloatsPerVertex + 4] = r;
 		vertex_buffer[triangle_num * kFloatsPerParticle + vertex_num * kFloatsPerVertex + 5] = g;
 		vertex_buffer[triangle_num * kFloatsPerParticle + vertex_num * kFloatsPerVertex + 6] = b;
+	}
+
+	void updateDataFromSimulator() {
+		const std::lock_guard<Particles> lg{ Simulator::particles };
+		for (int i = 0; i < kNumParticles; i++) {
+			velocities[i * 2 + 0] = Simulator::particles[i].velocity[0];
+			velocities[i * 2 + 1] = Simulator::particles[i].velocity[1];
+
+			float x = Simulator::particles[i].position[0] / kWindowSize[0] * 2.0 - 1.0;
+			float y = Simulator::particles[i].position[1] / kWindowSize[1] * 2.0 - 1.0;
+
+			float x1{}, y1{}, x2{}, y2{}, x3{}, y3{};
+			calculateTriangleFromCentroid(x, y, x1, y1, x2, y2, x3, y3);
+
+			float r = Simulator::particles[i].color[0] / 255.0;
+			float g = Simulator::particles[i].color[1] / 255.0;
+			float b = Simulator::particles[i].color[2] / 255.0;
+
+			assignVertexToVb(i, 0, x1, y1, x, y, r, g, b);
+			assignVertexToVb(i, 1, x2, y2, x, y, r, g, b);
+			assignVertexToVb(i, 2, x3, y3, x, y, r, g, b);
+		}
 	}
 
 	void populatePositions() {
@@ -148,4 +170,5 @@ private:
 	std::chrono::high_resolution_clock::time_point start_time{ std::chrono::high_resolution_clock::now() };
 	VertexBuffer vb{ kTotalFloats * sizeof(float) };
 	Shader shader{};
+	Simulator sim{};
 };
