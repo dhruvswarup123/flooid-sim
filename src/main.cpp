@@ -30,6 +30,8 @@ static void glfwErrorCallback(int error, const char* description) {
 
 int main(int, char**)
 {   
+    App app{};
+
     glfwSetErrorCallback(glfwErrorCallback);
     if (!glfwInit()) return false;
 
@@ -75,7 +77,7 @@ int main(int, char**)
     GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     GL_CALL(glEnable(GL_BLEND));
 
-    App::setup();
+    app.setup();
 
     // Main loop
     while (!glfwWindowShouldClose(window)) {
@@ -88,7 +90,7 @@ int main(int, char**)
         glfwGetFramebufferSize(window, &display_w, &display_h);
         GL_CALL(glViewport(0, 0, display_w, display_h));
 
-        App::loop();
+        app.loop();
 
 #ifdef IMGUI_ENABLE
         ImGui_ImplOpenGL3_NewFrame();
@@ -127,8 +129,6 @@ int main(int, char**)
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 #endif
-
-    App::deinit();
 
     glfwDestroyWindow(window);
     glfwTerminate();
