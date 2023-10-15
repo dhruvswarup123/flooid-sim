@@ -40,6 +40,14 @@ public:
 		GL_CALL(glUniform4f(getUniformLocation(name), v0, v1, v2, v3));
 	}
 
+	void setUniform2f(const std::string& name, float v0, float v1) {
+		GL_CALL(glUniform2f(getUniformLocation(name), v0, v1));
+	}
+
+	void setUniform1f(const std::string& name, float v0) {
+		GL_CALL(glUniform1f(getUniformLocation(name), v0));
+	}
+
 private:
 	static std::string readFile(const std::string& filepath) {
 		std::ifstream stream(filepath);
@@ -88,14 +96,14 @@ private:
 		return id;
 	}
 
-	unsigned int getUniformLocation(const std::string& name) {
+	int getUniformLocation(const std::string& name) {
 		if (uniform_loc_cache_.find(name) != uniform_loc_cache_.end()) {
 			return uniform_loc_cache_[name];
 		}
 
-		unsigned int location;
+		int location;
 		GL_CALL((location = glGetUniformLocation(id_, name.c_str())));
-		ASSERT(location != -1, "invalid uniform location");
+		ASSERT(location != -1, "Invalid uniform location / var may be unused");
 		uniform_loc_cache_[name] = location;
 
 		return location;

@@ -1,5 +1,8 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
+#include <math.h>
+
 #include <string>
 #include <iostream>
 #include <chrono>
@@ -7,11 +10,12 @@
 #include <GL/glew.h>
 
 #include "renderer.h"
+
 #include "vertex_buffer.h"
 #include "shader.h"
 
 // Sim size
-static constexpr int kNumParticles{ 100 }; // == num primitives
+static constexpr int kNumParticles{ 100000 }; // == num primitives
 
 // Primitives
 static constexpr int kVerticesPerParticle{ 3 }; // Triangle
@@ -32,6 +36,8 @@ static constexpr int kTotalFloats{ kNumParticles * kVerticesPerParticle * kFloat
 static float vertex_buffer[kTotalFloats];
 static float vel[2 * kNumParticles];
 
+static constexpr float one_by_tan_30{ 1.7320508075688772935274463415058723669428052538103806280558069794 };
+
 auto start_time = std::chrono::high_resolution_clock::now();
 
 VertexBuffer vb{kTotalFloats * sizeof(float)};
@@ -46,7 +52,7 @@ struct Vertex {
 static Vertex buffer[kNumParticles * 3]{};
 
 namespace App {
-	static constexpr float kRadius{ 0.1 };
+	static constexpr float kRadius{ 0.005 };
 
 	// Horribly inefficient algorithm
 // Convert to equilateral triangle ideally
@@ -57,12 +63,15 @@ namespace App {
 
 			float x = rand() % 200 / 100.0 - 1;
 			float y = rand() % 200 / 100.0 - 1;
+
 			float A_x{ x };
-			float A_y{ y };
-			float B_x{ x + kRadius };
-			float B_y{ A_y };
-			float C_x{ A_x };
-			float C_y{ A_y + kRadius };
+			float A_y{ y + 2 * kRadius };
+
+			float B_x{ x + one_by_tan_30 * kRadius };
+			float B_y{ y - kRadius };
+
+			float C_x{ x - one_by_tan_30 * kRadius };
+			float C_y{ y - kRadius };
 
 			float r = rand() % 100 / 100.0;
 			float g = rand() % 100 / 100.0;
@@ -70,24 +79,24 @@ namespace App {
 
 			vertex_buffer[i * 21 + 0] = A_x;
 			vertex_buffer[i * 21 + 1] = A_y;
-			vertex_buffer[i * 21 + 2] = 0;
-			vertex_buffer[i * 21 + 3] = 0;
+			vertex_buffer[i * 21 + 2] = x;
+			vertex_buffer[i * 21 + 3] = y;
 			vertex_buffer[i * 21 + 4] = r;
 			vertex_buffer[i * 21 + 5] = g;
 			vertex_buffer[i * 21 + 6] = b;
 
 			vertex_buffer[i * 21 + 7] = B_x;
 			vertex_buffer[i * 21 + 8] = B_y;
-			vertex_buffer[i * 21 + 9] = 0;
-			vertex_buffer[i * 21 + 10] = 0;
+			vertex_buffer[i * 21 + 9] = x;
+			vertex_buffer[i * 21 + 10] = y;
 			vertex_buffer[i * 21 + 11] = r;
 			vertex_buffer[i * 21 + 12] = g;
 			vertex_buffer[i * 21 + 13] = b;
 
 			vertex_buffer[i * 21 + 14] = C_x;
 			vertex_buffer[i * 21 + 15] = C_y;
-			vertex_buffer[i * 21 + 16] = 0;
-			vertex_buffer[i * 21 + 17] = 0;
+			vertex_buffer[i * 21 + 16] = x;
+			vertex_buffer[i * 21 + 17] = y;
 			vertex_buffer[i * 21 + 18] = r;
 			vertex_buffer[i * 21 + 19] = g;
 			vertex_buffer[i * 21 + 20] = b;
@@ -135,8 +144,8 @@ namespace App {
 	void updatePositions() {
 		for (int i = 0; i < kNumParticles; i++) {
 			vel[i * 2 + 1] += -9.8 * 1/200 * 1/100;
-			float x = vertex_buffer[i * 21 + 0] + vel[2*i];
-			float y = vertex_buffer[i * 21 + 1] + vel[i * 2 + 1];
+			float x = vertex_buffer[i * 21 + 2] + vel[i * 2];
+			float y = vertex_buffer[i * 21 + 3] + vel[i * 2 + 1];
 
 			if ((x < -1) || (x > 1)) {
 				vel[2 * i] *= -0.8;
@@ -148,11 +157,13 @@ namespace App {
 			}
 
 			float A_x{ x };
-			float A_y{ y };
-			float B_x{ x + kRadius };
-			float B_y{ A_y };
-			float C_x{ A_x };
-			float C_y{ A_y + kRadius };
+			float A_y{ y + 2 * kRadius };
+
+			float B_x{ x + one_by_tan_30 * kRadius };
+			float B_y{ y - kRadius };
+
+			float C_x{ x - one_by_tan_30 * kRadius };
+			float C_y{ y - kRadius };
 
 			float r = rand() % 100 / 100.0;
 			float g = rand() % 100 / 100.0;
@@ -160,27 +171,27 @@ namespace App {
 
 			vertex_buffer[i * 21 + 0] = A_x;
 			vertex_buffer[i * 21 + 1] = A_y;
-			vertex_buffer[i * 21 + 2] = A_x;
-			vertex_buffer[i * 21 + 3] = A_y;
-			vertex_buffer[i * 21 + 4] = r;
-			vertex_buffer[i * 21 + 5] = g;
-			vertex_buffer[i * 21 + 6] = b;
+			vertex_buffer[i * 21 + 2] = x;
+			vertex_buffer[i * 21 + 3] = y;
+			//vertex_buffer[i * 21 + 4] = r;
+			//vertex_buffer[i * 21 + 5] = g;
+			//vertex_buffer[i * 21 + 6] = b;
 
 			vertex_buffer[i * 21 + 7] = B_x;
 			vertex_buffer[i * 21 + 8] = B_y;
-			vertex_buffer[i * 21 + 9] = A_x;
-			vertex_buffer[i * 21 + 10] = A_y;
-			vertex_buffer[i * 21 + 11] = r;
-			vertex_buffer[i * 21 + 12] = g;
-			vertex_buffer[i * 21 + 13] = b;
+			vertex_buffer[i * 21 + 9] = x;
+			vertex_buffer[i * 21 + 10] = y;
+			//vertex_buffer[i * 21 + 11] = r;
+			//vertex_buffer[i * 21 + 12] = g;
+			//vertex_buffer[i * 21 + 13] = b;
 
 			vertex_buffer[i * 21 + 14] = C_x;
 			vertex_buffer[i * 21 + 15] = C_y;
-			vertex_buffer[i * 21 + 16] = A_x;
-			vertex_buffer[i * 21 + 17] = A_y;
-			vertex_buffer[i * 21 + 18] = r;
-			vertex_buffer[i * 21 + 19] = g;
-			vertex_buffer[i * 21 + 20] = b;
+			vertex_buffer[i * 21 + 16] = x;
+			vertex_buffer[i * 21 + 17] = y;
+			//vertex_buffer[i * 21 + 18] = r;
+			//vertex_buffer[i * 21 + 19] = g;
+			//vertex_buffer[i * 21 + 20] = b;
 		}
 	}	
 
@@ -189,6 +200,8 @@ namespace App {
 
 		vb.init(vertex_buffer, kTotalFloats * sizeof(float));
 		shader.init("shaders/shader.vert", "shaders/shader.frag");
+
+		shader.setUniform1f("u_radius", kRadius);
 
 		// 2D position
 		GL_CALL(glEnableVertexAttribArray(0));

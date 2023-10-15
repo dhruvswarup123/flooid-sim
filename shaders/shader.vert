@@ -10,6 +10,7 @@ out vec3 _color;
 void main() {
 	gl_Position = vec4(i_position, 0, 1);
 
-	_centroid = vec2(1280, 720) * (i_centroid*0.5 + 0.5); ;
+	_centroid = i_centroid;
 	_color = i_color;
+	;
 }
